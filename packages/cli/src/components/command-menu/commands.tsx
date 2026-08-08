@@ -4,52 +4,112 @@ export const COMMANDS: Command[] = [
     {
         name: "new",
         description: "Start a new conversation",
-        value: "/new"
+        value: "/new",
+        action: (ctx) => {
+            ctx.toast.show({
+                message: "Starting a new conversation...",
+                variant: "info",
+            });
+        }
     },
     {
         name: "agents",
         description: "Switch agents",
-        value: "/agents"
+        value: "/agents",
+        action: (ctx) => {
+            ctx.toast.show({
+                message: "Switching agents...",
+                variant: "info",
+            });
+        }
     },
     {
         name: "models",
         description: "Select AI model for generation",
-        value: "/models"
+        value: "/models",
+        action: (ctx) => {
+            ctx.toast.show({
+                message: "Selecting AI model...",
+                variant: "info",
+            });
+        }
     },
     {
         name: "sessions",
         description: "Browse past sessions",
-        value: "/sessions"
+        value: "/sessions",
+        action: (ctx) => {
+            ctx.toast.show({
+                message: "Loading past sessions...",
+                variant: "info",
+            });
+        }
     },
     {
         name: "theme",
         description: "Change theme color",
-        value: "/theme"
+        value: "/theme",
+        action: (ctx) => {
+            ctx.toast.show({
+                message: "Opening theme picker...",
+                variant: "info",
+            });
+        }
     },
     {
         name: "login",
         description: "Log in to your account",
-        value: "/login"
+        value: "/login",
+        action: (ctx) => {
+            ctx.toast.show({
+                message: "Logging in...",
+                variant: "info",
+            });
+        }
     },
     {
         name: "logout",
         description: "Log out of your account",
-        value: "/logout"
+        value: "/logout",
+        action: (ctx) => {
+            ctx.toast.show({
+                message: "Logging out...",
+                variant: "info",
+            });
+        }
     },
     {
         name: "login",
         description: "Log in to your account",
-        value: "/login"
+        value: "/login",
+        action: (ctx) => {
+            ctx.toast.show({
+                message: "Logging in...",
+                variant: "info",
+            });
+        }
     },
     {
         name: "upgrade",
         description: "Upgrade your account",
-        value: "/upgrade"
+        value: "/upgrade",
+        action: (ctx) => {
+            ctx.toast.show({
+                message: "Upgrading account...",
+                variant: "info",
+            });
+        }
     },
     {
         name: "usage",
         description: "View your usage statistics",
-        value: "/usage"
+        value: "/usage",
+        action: (ctx) => {
+            ctx.toast.show({
+                message: "Viewing usage statistics...",
+                variant: "info",
+            });
+        }
     },
     {
         name: "exit",
