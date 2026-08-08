@@ -6,6 +6,8 @@ import { useRenderer } from "@opentui/react";
 import { useCommandMenu } from "./command-menu/use-command-menu";
 import type { Command } from "./command-menu/types";
 import { CommandMenu } from "./command-menu";
+import { useToast } from "../providers/toast";
+import { useKeyboardLayer } from "../providers/keyboard-layer";
 
 type Props = {
     onSubmit: (value: string) => void;
@@ -23,6 +25,8 @@ export function InputBar({ onSubmit, disabled }: Props) {
     const textareaRef = useRef<TextareaRenderable>(null);
     const onSubmitRef = useRef<() => void>(() => {});
     const renderer = useRenderer();
+    const toast = useToast ();
+    const { isTopLayer, setResponder } = useKeyboardLayer();
 
     const {
         showCommandMenu,
@@ -65,12 +69,13 @@ export function InputBar({ onSubmit, disabled }: Props) {
         if(command.action) {
             command.action({
                 exit: () => renderer.destroy(),
+                toast
             });
         }
         else{
             textarea.insertText(command.value + " ");
         }
-    }, [renderer]);
+    }, [renderer, toast]);
 
     const handleCommandExecute = useCallback((
         index: number
@@ -101,6 +106,24 @@ export function InputBar({ onSubmit, disabled }: Props) {
 
         handleSubmit();
     }
+
+    // Register the base layer responder for the base layer dismissal via ctrl+c
+    // TODO: Standardize a single hook combining both the useEffect and the setResponder call to avoid unnecessary re-renders and to ensure the latest state is always used
+    useEffect(() => {
+        setResponder("base", () => {
+            if(disabled) return false;
+
+            const textarea = textareaRef.current;
+            if(textarea && textarea.plainText.length > 0) {
+                textarea.setText("");
+                return true;
+            }
+            return false;
+        });
+        return () => {
+            setResponder("base", null);
+        }
+    }, [setResponder, disabled]);
 
 
     return (
@@ -140,7 +163,10 @@ export function InputBar({ onSubmit, disabled }: Props) {
                     )}
                     <textarea
                         ref={textareaRef}
-                        focused={!disabled}
+                        focused={
+                            !disabled && 
+                            (isTopLayer("base") || isTopLayer("command"))
+                        }
                         keyBindings={TEXTAREA_KEYBINDINGS}
                         onContentChange={handleTextareaContentChange}
                         placeholder={`Ask me anything... "Fix a bug in the database"`}

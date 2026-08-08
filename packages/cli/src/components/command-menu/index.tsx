@@ -5,7 +5,7 @@ import type { RefObject } from "react";
 import { getFilteredCommands } from "./filter-commands";
 import { colors } from "../../theme/colors";
 
-const MAX_VISIBLE_COMMANDS = 10;
+const MAX_VISIBLE_ITEMS = 10;
 
 // The width of the command menu should accommodate the longest command name and description.
 // Also the descriptions should start from the same horizontal position as the command names.
@@ -27,7 +27,7 @@ export function CommandMenu({
     onExecute,
 }: CommandMenuProps) {
     const filteredCommands = getFilteredCommands(query);
-    const visibleCommands = Math.min(filteredCommands.length, MAX_VISIBLE_COMMANDS);
+    const visibleCommands = Math.min(filteredCommands.length, MAX_VISIBLE_ITEMS);
 
     if(filteredCommands.length === 0) {
         return (
