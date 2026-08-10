@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from "react";
 import { DEFAULT_TOAST_DURATION, type ToastOptions, type ToastVariant } from "./types";
 import { useTerminalDimensions } from "@opentui/react";
-import { colors } from "../../theme/colors";
+import { useTheme } from "../theme";
 
 export type ToastContextValue = {
     show: (options: ToastOptions) => void;
@@ -67,6 +67,7 @@ type ToastProps = {
 
 function Toast({ currentToast }: ToastProps) {
   const { width } = useTerminalDimensions();
+  const { colors } = useTheme();
 
   if (!currentToast) {
     return null;
@@ -94,12 +95,12 @@ function Toast({ currentToast }: ToastProps) {
       paddingRight={2}
       paddingTop={1}
       paddingBottom={1}
-      backgroundColor={colors.backgroundBlack}
+      backgroundColor={colors.surface}
       borderColor={borderColor}
       border={["left", "right"]}
     >
       <box flexDirection="column" gap={1} width="100%">
-        <text fg={colors.toastText} wrapMode="word" width="100%">
+    <text fg="#E1E1E1" wrapMode="word" width="100%">
           {currentToast.message}
         </text>
       </box>
