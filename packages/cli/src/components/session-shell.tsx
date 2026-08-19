@@ -8,14 +8,15 @@ type Props = {
   onSubmit: (text: string) => void;
   inputDisabled?: boolean;
   loading?: boolean;
+  interruptible?: boolean;
 };
 
-// line 30: reverse scroll for llm responses, so that the latest message is always visible at the bottom
 export function SessionShell({
   children,
   onSubmit,
   inputDisabled = false,
   loading = false,
+  interruptible = false,
 }: Props) {
   return (
     <box
@@ -27,8 +28,7 @@ export function SessionShell({
       paddingX={2}
       gap={1}
     >
-        
-      <scrollbox flexGrow={1} width="100%" stickyScroll stickyStart="bottom"> 
+      <scrollbox flexGrow={1} width="100%" stickyScroll stickyStart="bottom">
         <box gap={1}>{children}</box>
       </scrollbox>
       <box flexShrink={0}>
@@ -44,7 +44,12 @@ export function SessionShell({
         paddingLeft={1}
       >
         <box flexDirection="row" alignItems="center" gap={2}>
-          {loading ? <Spinner /> : null}
+          {loading ? (
+            <>
+              <Spinner />
+              {interruptible ? <text>esc to interrupt</text> : null}
+            </>
+          ) : null}
         </box>
 
         <box flexDirection="row" gap={1} flexShrink={0} marginLeft="auto">
