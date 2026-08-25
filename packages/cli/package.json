@@ -15,10 +15,11 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@yourcode/shared": "workspace:*",
-    "@yourcode/database": "workspace:*",
     "@opentui/core": "^0.2.15",
     "@opentui/react": "^0.2.15",
+    "@yourcode/database": "workspace:*",
+    "@yourcode/shared": "workspace:*",
+    "date-fns": "^4.4.0",
     "eventsource-parser": "^4.0.0",
     "hono": "^4.13.2",
     "opentui-spinner": "^0.0.7",
