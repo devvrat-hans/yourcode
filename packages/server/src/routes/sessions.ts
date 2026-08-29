@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db } from "@yourcode/database/client";
 import { Role, Mode, MessageStatus } from "@yourcode/database/enums";
 import { findSupportedChatModel } from "@yourcode/shared";
+import type { AuthenticatedEnv } from "../middleware/require-auth";
 
 const createSessionSchema = z.object({
   title: z.string(),
@@ -27,9 +28,12 @@ const createSessionValidator = zValidator(
   }
 });
 
-const app = new Hono()
+const app = new Hono<AuthenticatedEnv>()
   .get("/", async (c) => {
+    const userId = c.get("userId");
+
     const sessions = await db.session.findMany({
+      where: { userId },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -41,19 +45,20 @@ const app = new Hono()
     return c.json(sessions);
   })
   .get("/:id", async (c) => {
-    // Uncomment to simulate slow session loading
+    // MOCK: Uncomment to simulate slow session loading
     // await new Promise((r) => setTimeout(r, 5000))
 
-    // Uncomment to simulate session loading error
+    // MOCK: Uncomment to simulate session loading error
     // throw new HTTPException(
     //   500, 
     //   { message: "Mock error: session loading failed" }
     // )
 
     const id = c.req.param("id");
+    const userId = c.get("userId");
     
     const session = await db.session.findUnique({
-      where: { id },
+      where: { id, userId },
       include: {
         messages: { orderBy: { createdAt: "asc" } },
       },
@@ -66,21 +71,22 @@ const app = new Hono()
     return c.json(session);
   })
   .post("/", createSessionValidator, async (c) => {
-    // Uncomment to simulate slow session loading
+    // MOCK: Uncomment to simulate slow session loading
     // await new Promise((r) => setTimeout(r, 5000))
 
-    // Uncomment to simulate session loading error
+    // MOCK: Uncomment to simulate session loading error
     // throw new HTTPException(
     //   500, 
     //   { message: "Mock error: session loading failed" }
     // )
 
+    const userId = c.get("userId");
     const { initialMessage, ...data } = c.req.valid("json");
 
     const session = await db.session.create({
       data: {
         ...data,
-        userId: "mock-user",
+        userId,
         ...(initialMessage && {
           messages: {
             create: {
