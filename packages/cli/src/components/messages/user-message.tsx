@@ -1,18 +1,20 @@
+import { Mode } from "@yourcode/database/enums";
 import { useTheme } from "../../providers/theme";
 
 type Props = {
   message: string;
+  mode: Mode;
 };
 
-export function UserMessage({ message }: Props) {
+export function UserMessage({ message, mode }: Props) {
   const { colors } = useTheme();
 
   return (
     <box width="100%" alignItems="center">
       <box
         border={["left"]}
-        borderColor={colors.primary}
-        width="100%"
+        borderColor={mode === Mode.PLAN ? colors.planMode : colors.primary}
+         width="100%"
       >
         <box
           justifyContent="center"
