@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { z } from "zod";
-import { DEFAULT_CHAT_MODEL_ID } from "@yourcode/shared";
+import { Mode } from "@yourcode/database/enums";
 import { useNavigate, useLocation } from "react-router";
 import { SessionShell } from "../components/session-shell";
 import { UserMessage } from "../components/messages";
@@ -10,8 +10,10 @@ import { getErrorMessage } from "../lib/http-errors";
 
 const newSessionStateSchema = z.object({
   message: z.string(),
+  mode: z.enum(Mode),
+  model: z.string(),
 });
- 
+
 export function NewSession() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,14 +25,14 @@ export function NewSession() {
     return parsed.success ? parsed.data : null;
   }, [location.state])
 
-  // Guard: if navigated here directly without state, redirect to home
+  // Guard: if navigated here directly without state, go home
   useEffect(() => {
     if (!state) {
       navigate("/", { replace: true });
     }
   }, [state, navigate]);
 
-  // Create the session on mount — main purpose of this screen
+  // Create the session on mount — this screen exists to do this
   useEffect(() => {
     if (!state || hasStartedRef.current) return;
 
@@ -46,8 +48,8 @@ export function NewSession() {
             initialMessage: {
               role: "USER",
               content: state.message,
-              mode: "BUILD",
-              model: DEFAULT_CHAT_MODEL_ID,
+              mode: state.mode,
+              model: state.model,
             },
           },
         });
@@ -81,7 +83,7 @@ export function NewSession() {
 
   return (
     <SessionShell onSubmit={() => {}} inputDisabled loading>
-      <UserMessage message={state.message} />
+      <UserMessage message={state.message} mode={state.mode} />
     </SessionShell>
   );
 };
