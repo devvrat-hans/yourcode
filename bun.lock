@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "yourcode",
+      "dependencies": {
+        "dotenv": "^17.4.2",
+      },
     },
     "packages/cli": {
       "name": "@yourcode/cli",
