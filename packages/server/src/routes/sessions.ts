@@ -3,21 +3,13 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { db } from "@yourcode/database/client";
-import { Role, Mode, MessageStatus } from "@yourcode/database/enums";
-import { findSupportedChatModel } from "@yourcode/shared";
+
+import type { AuthenticatedEnv } from "../middleware/require-auth";
+import { requireCreditsBalance } from "../middleware/require-credits-balance";
+
 
 const createSessionSchema = z.object({
   title: z.string(),
-  cwd: z.string().optional(),
-  initialMessage: z
-    .object({
-      role: z.enum(Role),
-      content: z.string(),
-      mode: z.enum(Mode),
-      model: z.string()
-        .refine((id) => !!findSupportedChatModel(id), "Unsupported model"),
-    })
-    .optional(),
 });
 
 const createSessionValidator = zValidator(
@@ -27,9 +19,12 @@ const createSessionValidator = zValidator(
   }
 });
 
-const app = new Hono()
+const app = new Hono<AuthenticatedEnv>()
   .get("/", async (c) => {
+    const userId = c.get("userId");
+
     const sessions = await db.session.findMany({
+      where: { userId },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -41,22 +36,20 @@ const app = new Hono()
     return c.json(sessions);
   })
   .get("/:id", async (c) => {
-    // Uncomment to simulate slow session loading
+    // MOCK: Uncomment to simulate slow session loading
     // await new Promise((r) => setTimeout(r, 5000))
 
-    // Uncomment to simulate session loading error
+    // MOCK: Uncomment to simulate session loading error
     // throw new HTTPException(
     //   500, 
     //   { message: "Mock error: session loading failed" }
     // )
 
     const id = c.req.param("id");
+    const userId = c.get("userId");
     
     const session = await db.session.findUnique({
-      where: { id },
-      include: {
-        messages: { orderBy: { createdAt: "asc" } },
-      },
+      where: { id, userId },
     });
 
     if (!session) {
@@ -65,32 +58,24 @@ const app = new Hono()
 
     return c.json(session);
   })
-  .post("/", createSessionValidator, async (c) => {
-    // Uncomment to simulate slow session loading
+  .post("/", requireCreditsBalance, createSessionValidator, async (c) => {
+    // MOCK: Uncomment to simulate slow session loading
     // await new Promise((r) => setTimeout(r, 5000))
 
-    // Uncomment to simulate session loading error
+    // MOCK: Uncomment to simulate session loading error
     // throw new HTTPException(
     //   500, 
     //   { message: "Mock error: session loading failed" }
     // )
 
-    const { initialMessage, ...data } = c.req.valid("json");
+    const userId = c.get("userId");
+    const data = c.req.valid("json");
 
     const session = await db.session.create({
       data: {
         ...data,
-        userId: "mock-user",
-        ...(initialMessage && {
-          messages: {
-            create: {
-              ...initialMessage,
-              status: MessageStatus.COMPLETE,
-            },
-          },
-        })
+        userId,
       },
-      include: { messages: true },
     });
 
     return c.json(session, 201);

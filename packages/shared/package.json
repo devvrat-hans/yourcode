@@ -4,5 +4,8 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "ai": "^7.0.90"
   }
 }

@@ -3,8 +3,12 @@
   "module": "src/index.tsx",
   "type": "module",
   "private": true,
+  "bin": {
+    "yourcode": "./bin/yourcode"
+  },
   "scripts": {
-    "dev": "bun run --watch src/index.tsx"
+    "dev": "bun run --watch src/index.tsx",
+    "build": "bun build src/index.tsx --outdir dist --target bun"
   },
   "devDependencies": {
     "@yourcode/server": "workspace:*",
@@ -15,13 +19,14 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@ai-sdk/react": "^4.0.93",
     "@opentui/core": "^0.2.15",
     "@opentui/react": "^0.2.15",
-    "@yourcode/database": "workspace:*",
     "@yourcode/shared": "workspace:*",
+    "ai": "^7.0.90",
     "date-fns": "^4.4.0",
-    "eventsource-parser": "^4.0.0",
     "hono": "^4.13.2",
+    "open": "^11.0.2",
     "opentui-spinner": "^0.0.7",
     "pretty-ms": "^9.3.0",
     "react": "^19.2.6",

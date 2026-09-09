@@ -1,9 +1,9 @@
-import { Mode } from "@yourcode/database/enums";
+import { Mode, type ModeType } from "@yourcode/shared";
 import { useTheme } from "../../providers/theme";
 
 type Props = {
   message: string;
-  mode: Mode;
+  mode: ModeType;
 };
 
 export function UserMessage({ message, mode }: Props) {
@@ -13,8 +13,8 @@ export function UserMessage({ message, mode }: Props) {
     <box width="100%" alignItems="center">
       <box
         border={["left"]}
-        borderColor={mode === Mode.PLAN ? colors.planMode : colors.primary}
-         width="100%"
+        borderColor={mode === Mode.PLAN ? colors.planMode : colors.primary}       
+        width="100%"
       >
         <box
           justifyContent="center"
