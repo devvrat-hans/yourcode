@@ -1,11 +1,13 @@
 {
-  "name": "yourcode",
+  "name": "yourcode-monorepo",
   "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
   "workspaces": ["packages/*"],
   "scripts": {
     "dev:cli": "bun run --watch packages/cli/src/index.tsx",
     "dev:server": "bun run --hot packages/server/src/index.ts",
-    "build:cli": "bun run --filter @yourcode/cli build",
+    "build:cli": "bun run --cwd packages/cli build",
     "link:cli": "bun run build:cli && cd packages/cli && bun link"
   },
   "dependencies": {
