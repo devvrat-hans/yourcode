@@ -1,10 +1,20 @@
 #!/usr/bin/env bun
+import { existsSync } from "node:fs";
+import { homedir } from "node:os";
+import { resolve } from "node:path";
 import dotenv from "dotenv";
-import path from "path";
 
-dotenv.config({
-  path: path.resolve(import.meta.dirname, "../../../.env"),
-  quiet: true,
-});
+// 1. Load from current working directory (.env)
+dotenv.config({ path: resolve(process.cwd(), ".env"), quiet: true });
 
-await import("../src/index.tsx");
+// 2. Load from user configuration directory (~/.yourcode/.env)
+dotenv.config({ path: resolve(homedir(), ".yourcode/.env"), quiet: true });
+
+// 3. Fallback to repository root .env during local monorepo development
+const monorepoEnv = resolve(import.meta.dirname, "../../../.env");
+if (existsSync(monorepoEnv)) {
+  dotenv.config({ path: monorepoEnv, quiet: true });
+}
+
+// Execute the pre-built distribution bundle
+await import("../dist/index.js");

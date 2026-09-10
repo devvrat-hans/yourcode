@@ -1,36 +1,59 @@
 {
-  "name": "@yourcode/cli",
-  "module": "src/index.tsx",
+  "name": "yourcode",
+  "version": "0.1.1",
+  "description": "Terminal-native autonomous AI coding agent with client-side tool execution and DLP guardrails",
   "type": "module",
-  "private": true,
   "bin": {
-    "yourcode": "./bin/yourcode"
+    "yourcode": "bin/yourcode"
   },
+  "files": [
+    "bin",
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "dev": "bun run --watch src/index.tsx",
-    "build": "bun build src/index.tsx --outdir dist --target bun"
-  },
-  "devDependencies": {
-    "@yourcode/server": "workspace:*",
-    "@types/bun": "latest",
-    "@types/react": "^19.2.17"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "build": "bun build src/index.tsx --outdir dist --target bun",
+    "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "@ai-sdk/react": "^4.0.93",
     "@opentui/core": "^0.2.15",
     "@opentui/react": "^0.2.15",
+    "dotenv": "^17.4.2",
+    "opentui-spinner": "^0.0.7",
+    "react": "^19.2.6"
+  },
+  "devDependencies": {
+    "@ai-sdk/react": "^4.0.93",
+    "@types/bun": "latest",
+    "@types/react": "^19.2.17",
+    "@yourcode/server": "workspace:*",
     "@yourcode/shared": "workspace:*",
     "ai": "^7.0.90",
     "date-fns": "^4.4.0",
     "hono": "^4.13.2",
     "open": "^11.0.2",
-    "opentui-spinner": "^0.0.7",
     "pretty-ms": "^9.3.0",
-    "react": "^19.2.6",
     "react-router": "^8.3.0",
     "zod": "^4.4.3"
-  }
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devvrat-hans/yourcode.git"
+  },
+  "keywords": [
+    "ai",
+    "coding-agent",
+    "terminal",
+    "opentui",
+    "bun",
+    "cli",
+    "code-assistant"
+  ],
+  "author": "Devvrat Hans",
+  "license": "MIT"
 }
